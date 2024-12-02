@@ -16,7 +16,7 @@ android {
 
   defaultConfig {
     applicationId = "com.google.android.fhir.ipsapp"
-    minSdk = 33
+    minSdk = 26
     targetSdk = 33
     versionCode = 1
     versionName = "1.0"

@@ -43,7 +43,7 @@ class GenerateSHL : AppCompatActivity() {
     setContentView(R.layout.view_shl)
 
     val passcode: String = intent.getStringExtra("passcode").toString()
-    val shlData = intent.getSerializableExtra("shlData", SHLinkGenerationData::class.java)
+    val shlData = intent.serializable<SHLinkGenerationData>("shlData")
     val passcodeField = findViewById<TextView>(R.id.passcode)
     val expirationDateField = findViewById<TextView>(R.id.expirationDate)
     passcodeField.text = passcode

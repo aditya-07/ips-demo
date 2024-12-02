@@ -31,7 +31,13 @@ import com.google.android.fhir.document.RetrofitSHLService
 import com.google.android.fhir.document.decode.ReadSHLinkUtils
 import com.google.android.fhir.document.decode.SHLinkDecoderImpl
 import com.google.android.fhir.document.scan.SHLinkScanData
+import java.io.Serializable
 import kotlinx.coroutines.launch
+
+inline fun <reified T : Serializable> Intent.serializable(key: String): T? = when {
+  Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializableExtra(key, T::class.java)
+  else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
+}
 
 class SuccessfulScan : AppCompatActivity() {
 
@@ -40,7 +46,7 @@ class SuccessfulScan : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.successfulscan)
 
-    val shlData = intent.getSerializableExtra("shlData", SHLinkScanData::class.java)
+    val shlData = intent.serializable<SHLinkScanData>("shlData")
 
     val decoder = SHLinkDecoderImpl(
       ReadSHLinkUtils,
@@ -70,6 +76,7 @@ class SuccessfulScan : AppCompatActivity() {
         val i = Intent()
         i.component = ComponentName(this@SuccessfulScan, GetData::class.java)
         i.putExtra("doc", doc as java.io.Serializable)
+        i.putExtra("shlData", shlData as java.io.Serializable)
         startActivity(i)
       }
     }

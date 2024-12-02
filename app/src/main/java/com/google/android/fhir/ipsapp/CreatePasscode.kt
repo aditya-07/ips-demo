@@ -22,7 +22,7 @@ class CreatePasscode : Activity() {
     setContentView(R.layout.create_passcode)
 
     val datePicker = findViewById<DatePicker>(R.id.datePicker)
-    val shlData = intent.getSerializableExtra("shlData", SHLinkGenerationData::class.java)
+    val shlData = intent.serializable<SHLinkGenerationData>("shlData",)
 
     val today: Calendar = Calendar.getInstance()
     datePicker.minDate = today.timeInMillis
