@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.fhir.document.IPSDocument
@@ -28,8 +29,7 @@ class GetData : AppCompatActivity() {
     qrCodeLayout = findViewById(R.id.qr_code_frame)
     val cancel : View = findViewById(R.id.cancel)
     cancel.setOnClickListener {
-      qrCodeLayout?.visibility   = View.GONE
-      detailsLayout?.visibility = View.VISIBLE
+      removeQR()
     }
     val doc = intent.serializable<IPSDocument>("doc")
      shl = intent.serializable<SHLinkScanData>("shlData")
@@ -53,21 +53,41 @@ class GetData : AppCompatActivity() {
 
   override fun onBackPressed() {
     if (qrCodeLayout?.isVisible == true) {
-      qrCodeLayout?.visibility   = View.GONE
-      detailsLayout?.visibility = View.VISIBLE
+      removeQR()
       return
     }
     super.onBackPressed()
   }
 
-  fun share() {
+  override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+
+    menu?.let {
+      menu.forEach {
+        it.setVisible(detailsLayout?.isVisible ?: true)
+      }
+    }
+    return super.onPrepareOptionsMenu(menu)
+  }
+
+  private fun share() {
 
     lifecycleScope.launch {
       QRGeneratorUtils(this@GetData).createQRCodeBitmap(shl!!.fullLink).let {
-        qrCodeLayout?.visibility   = View.VISIBLE
         qrCodeImageView?.setImageBitmap(it)
-        detailsLayout?.visibility = View.GONE
+        showQR()
       }
     }
+  }
+
+  private fun showQR() {
+    detailsLayout?.visibility = View.GONE
+    qrCodeLayout?.visibility   = View.VISIBLE
+    invalidateOptionsMenu()
+  }
+
+  private fun removeQR() {
+    detailsLayout?.visibility = View.VISIBLE
+    qrCodeLayout?.visibility   = View.GONE
+    invalidateOptionsMenu()
   }
 }

@@ -290,7 +290,7 @@
     </LinearLayout>
   </ScrollView>
   <FrameLayout
-      android:background="#0f000000"
+      android:background="#000000"
       android:id="@+id/qr_code_frame"
       android:visibility="gone"
       android:layout_width="match_parent"
